@@ -5,7 +5,7 @@ type repositories struct {
 }
 
 func (registry *Registry) Catalog() ([]string, error) {
-	url := registry.url("/v2/catalog")
+	url := registry.url("/v2/_catalog")
 	registry.Logf("registry.catalog url=%s", url)
 
 	var response repositories
