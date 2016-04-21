@@ -5,10 +5,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/docker/distribution/manifest"
+	"github.com/docker/distribution/manifest/schema1"
 )
 
-func (registry *Registry) Manifest(repository, reference string) (*manifest.SignedManifest, error) {
+func (registry *Registry) Manifest(repository, reference string) (*schema1.SignedManifest, error) {
 	url := registry.url("/v2/%s/manifests/%s", repository, reference)
 	registry.Logf("registry.manifest.get url=%s repository=%s reference=%s", url, repository, reference)
 
@@ -25,7 +25,7 @@ func (registry *Registry) Manifest(repository, reference string) (*manifest.Sign
 		return nil, err
 	}
 
-	signedManifest := &manifest.SignedManifest{}
+	signedManifest := &schema1.SignedManifest{}
 	err = signedManifest.UnmarshalJSON(body)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (registry *Registry) Manifest(repository, reference string) (*manifest.Sign
 	return signedManifest, nil
 }
 
-func (registry *Registry) PutManifest(repository, reference string, signedManifest *manifest.SignedManifest) error {
+func (registry *Registry) PutManifest(repository, reference string, signedManifest *schema1.SignedManifest) error {
 	url := registry.url("/v2/%s/manifests/%s", repository, reference)
 	registry.Logf("registry.manifest.put url=%s repository=%s reference=%s", url, repository, reference)
 
@@ -49,7 +49,7 @@ func (registry *Registry) PutManifest(repository, reference string, signedManife
 		return err
 	}
 
-	req.Header.Set("Content-Type", manifest.ManifestMediaType)
+	req.Header.Set("Content-Type", schema1.ManifestMediaType)
 	resp, err := registry.Client.Do(req)
 	if resp != nil {
 		defer resp.Body.Close()
