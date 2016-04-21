@@ -49,7 +49,7 @@ func (registry *Registry) PutManifest(repository, reference string, signedManife
 		return err
 	}
 
-	req.Header.Set("Content-Type", schema1.ManifestMediaType)
+	req.Header.Set("Content-Type", schema1.MediaTypeManifest)
 	resp, err := registry.Client.Do(req)
 	if resp != nil {
 		defer resp.Body.Close()
